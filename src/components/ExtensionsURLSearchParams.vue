@@ -76,8 +76,6 @@ onMounted(() => {
       }
     });
 
-    console.log(URLSearchParamsArray)
-    
     URLSearchParamsArray.forEach((URLSearchParamsArrayItem, URLSearchParamsArrayIndex) => {
       if (URLSearchParamsArrayItem.length === 2) {
         if (URLSearchParamsArrayIndex === 0) {
@@ -124,6 +122,7 @@ onMounted(() => {
             id="urlParametersCopyOutputUrl"
             class="ma-2"
             v-bind="props"
+            variant="tonal"
           >Copy To Clipboard</v-btn>
         </template>
         Copied to Clipboard!
