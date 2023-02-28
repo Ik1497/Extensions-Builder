@@ -2,8 +2,8 @@
 import ExtensionsURLSearchParams from '../components/ExtensionsURLSearchParams.vue'
 
 const extensionData = {
-  name: 'Music Widget',
-  baseUrl: 'https://ik1497.github.io/Extensions/Music/',
+  name: 'Mute Indicator',
+  baseUrl: 'https://ik1497.github.io/Extensions/Mute-Indicator/',
   URLSearchParams: [
     {
       name: 'General',
@@ -14,7 +14,7 @@ const extensionData = {
       description: 'Different visual options for this widget.',
       type: 'options',
       default: 'default',
-      options: ['default', 'minimal']
+      options: ['default', 'big']
     },
     {
       name: 'ws',
@@ -33,6 +33,12 @@ const extensionData = {
       type: 'string'
     },
     {
+      name: 'font-weight',
+      description: 'The Font Weight.',
+      default: '900',
+      type: 'string'
+    },
+    {
       name: 'font-style',
       description: 'The Font Style.',
       default: 'normal',
@@ -45,53 +51,44 @@ const extensionData = {
       type: 'string'
     },
     {
-      name: 'Background',
+      name: 'font-color',
+      description: 'The Font and the mute icon color (HEX values unsupported).',
+      default: 'hsl(0, 0%, 9%)',
+      type: 'string'
+    },
+    {
+      name: 'Chip Styling',
       type: 'heading'
     },
     {
-      name: 'background',
-      description: 'The background behind the music info.',
-      default: 'hsl(0, 0%, 0%, 0.7)',
+      name: 'chip-background',
+      description: 'The background of the chips (HEX values unsupported).',
+      default: 'hsl(0, 100%, 65%)',
       type: 'string'
     },
     {
-      name: 'alt-background',
-      description: 'The background behind the album cover.',
-      default: 'hsl(240, 5%, 11%)',
+      name: 'chip-border-radius',
+      description: 'The border radius of the chips.',
+      default: '0',
       type: 'string'
     },
     {
-      name: 'Colors',
+      name: 'Only Include/Exclude certain audio sources',
+      description: 'You can\'t use both at the same time',
       type: 'heading'
     },
     {
-      name: 'color-primary',
-      description: 'The primary text color, used for the song title.',
-      default: 'hsl(0, 0%, 100%)',
-      type: 'string'
+      name: 'exclude',
+      description: 'The audio sources to only exlude',
+      default: 'None',
+      type: 'comma-list'
     },
     {
-      name: 'color-accent',
-      description: 'The accent text color, used for the song artist.',
-      default: 'hsla(0, 0%, 100%, 0.7)',
-      type: 'string'
-    },
-    {
-      name: 'Border Radius',
-      type: 'heading'
-    },
-    {
-      name: 'border-radius-album-cover',
-      description: 'The border radius on the album cover.',
-      default: '1em',
-      type: 'string'
-    },
-    {
-      name: 'border-radius-texts-background',
-      description: 'The border radius of the text\'s background.',
-      default: '1.5em',
-      type: 'string'
-    },
+      name: 'include',
+      description: 'The audio sources to only include',
+      default: 'None',
+      type: 'comma-list'
+    }
   ]
 };
 
