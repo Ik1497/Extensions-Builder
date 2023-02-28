@@ -18,6 +18,11 @@ for (let searchParam of new URLSearchParams(window.location.href)) {
 
 onMounted(() => {
   document.getElementById('urlParametersList').querySelectorAll(`.v-list-item`).forEach(vListItem => {
+    vListItem.querySelector(`.close-list-item-button`).addEventListener(`click`, () => {
+      setTimeout(updateParamsUi);
+    })
+
+
     if (vListItem.querySelector(`.v-select`) != null) {
       vListItem.querySelector(`.v-select`).addEventListener(`mouseover`, () => {
         setTimeout(updateParamsUi);
@@ -170,6 +175,14 @@ onMounted(() => {
             :subtitle="param.description"
             :data-url-parameter="param.name"
           >
+          <v-btn
+            icon="mdi-close"
+            color="error"
+            variant="tonal"
+            class="close-list-item-button"
+            onclick="this.parentNode.parentNode.remove()"
+          >
+          </v-btn>
           <br>
           <v-select
               v-if="param.type === 'options'"
@@ -226,11 +239,21 @@ onMounted(() => {
   background: #181818;
   padding-block: 1rem;
   border-radius: 4px;
+  position: relative;
 
   &:not(:last-child) {
     margin-bottom: .5rem;
   }
+  .close-list-item-button {
+    --v-btn-height: .5rem;
+    font-size: var(--v-btn-height);
+
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+  }
 }
+
 
 h2 {
   margin-block: 1rem;
