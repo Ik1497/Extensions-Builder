@@ -53,8 +53,8 @@ const extensionData = {
     {
       name: 'font-color',
       description: 'The Font and the mute icon color (HEX values unsupported).',
-      default: 'hsl(0, 0%, 9%)',
-      type: 'string'
+      default: {h: 0, s: 0, l: 0.09, a: 1},
+      type: 'color'
     },
     {
       name: 'Chip Styling',
@@ -63,8 +63,8 @@ const extensionData = {
     {
       name: 'chip-background',
       description: 'The background of the chips (HEX values unsupported).',
-      default: 'hsl(0, 100%, 65%)',
-      type: 'string'
+      default: {h: 0, s: 1, l: 0.65, a: 1},
+      type: 'color'
     },
     {
       name: 'chip-border-radius',

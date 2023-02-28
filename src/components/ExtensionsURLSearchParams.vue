@@ -41,6 +41,25 @@ onMounted(() => {
         setTimeout(updateParamsUi);
       })
     }
+    
+    else if (vListItem.querySelector(`.v-color-picker`) != null) {
+      vListItem.querySelector(`.v-color-picker`).addEventListener(`click`, () => {
+        setTimeout(updateParamsUi);
+        vListItem.querySelector(`.v-color-picker`).removeAttribute(`data-default-value-used`)
+      })
+      
+      vListItem.querySelector(`.v-color-picker`).addEventListener(`keydown`, () => {
+        setTimeout(updateParamsUi);
+        vListItem.querySelector(`.v-color-picker`).removeAttribute(`data-default-value-used`)
+      })
+      
+      vListItem.querySelector(`.v-color-picker .v-color-picker-canvas__dot`).addEventListener(`mousemove`, (e) => {
+        if (e.buttons > 0) {
+          setTimeout(updateParamsUi);
+          vListItem.querySelector(`.v-color-picker`).removeAttribute(`data-default-value-used`)
+        }
+      })
+    }
   });
 
   updateParamsUi()
@@ -73,6 +92,10 @@ onMounted(() => {
         if (vListItem.querySelector(`.v-checkbox input[type="checkbox"]`).checked) {
           URLSearchParamsArray.push([vListItem.querySelector(`.v-list-item-title`).innerText])
         }
+      }
+      
+      else if (vListItem.querySelector(`.v-color-picker`) != null && vListItem.querySelector(`.v-color-picker`).getAttribute(`data-default-value-used`) != ``) {
+        URLSearchParamsArray.push([vListItem.querySelector(`.v-list-item-title`).innerText, vListItem.querySelector(`.v-color-picker .v-color-picker-preview__dot div`).style.background])
       }
     });
 
@@ -165,7 +188,13 @@ onMounted(() => {
               v-if="param.type === 'checkbox'"
               :label="param.name"
               :model-value="param.default"
-            ></v-checkbox>
+              ></v-checkbox>
+              <v-color-picker
+              v-if="param.type === 'color'"
+              :model-value="param.default != `None` ? param.default : null"
+              :modes="['hsl', 'hsla', 'rgb', 'rgba']"
+              data-default-value-used
+            ></v-color-picker>
           </v-list-item>
           <template v-else-if="param.type === 'heading'">
             <h2>{{ param.name }}

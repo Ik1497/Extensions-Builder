@@ -68,7 +68,7 @@ const items = computed(() => [
           v-if="item.enabled"
           :active="$route.path === item.path"
           active-color="primary"
-          :to="item.path"
+          :to="'.' + item.path"
           @click="activeItem = idx"
         >
           <template #prepend>

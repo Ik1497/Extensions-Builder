@@ -51,14 +51,14 @@ const extensionData = {
     {
       name: 'background',
       description: 'The background behind the music info.',
-      default: 'hsl(0, 0%, 0%, 0.7)',
-      type: 'string'
+      default: {h: 0, s: 1, l: 0, a: 0.7},
+      type: 'color'
     },
     {
       name: 'alt-background',
       description: 'The background behind the album cover.',
-      default: 'hsl(240, 5%, 11%)',
-      type: 'string'
+      default: {h: 240, s: 0.05, l: 0.11, a: 1},
+      type: 'color'
     },
     {
       name: 'Colors',
@@ -67,14 +67,14 @@ const extensionData = {
     {
       name: 'color-primary',
       description: 'The primary text color, used for the song title.',
-      default: 'hsl(0, 0%, 100%)',
-      type: 'string'
+      default: {h: 0, s: 0, l: 1, a: 1},
+      type: 'color'
     },
     {
       name: 'color-accent',
       description: 'The accent text color, used for the song artist.',
-      default: 'hsla(0, 0%, 100%, 0.7)',
-      type: 'string'
+      default: {h: 0, s: 0, l: 1, a: 0.7},
+      type: 'color'
     },
     {
       name: 'Border Radius',

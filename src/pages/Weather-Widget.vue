@@ -90,8 +90,8 @@ const extensionData = {
     {
       name: 'font-color',
       description: 'The Font and the mute icon color (HEX values unsupported).',
-      default: 'hsl(0, 0%, 100%)',
-      type: 'string'
+      default: {h: 0, s: 0, l: 1, a: 1},
+      type: 'color'
     },
     {
       name: 'General Widget Styling',
@@ -106,8 +106,8 @@ const extensionData = {
     {
       name: 'background',
       description: 'Changes the background color, allows CSS gradients. This will remove the day/night background colors (HEX values unsupported).',
-      default: 'day: linear-gradient(hsl(194, 97%, 44%), hsl(219, 94%, 41%)), night: linear-gradient(hsl(224, 14%, 15%), hsl(255, 20%, 4%))',
-      type: 'string'
+      default: 'None',
+      type: 'color'
     },
     {
       name: 'Weather Name',
@@ -146,7 +146,7 @@ const extensionData = {
       type: 'text'
     },
     {
-      name: 'Generate API Key Website (note: you need an account for this) ',
+      name: 'Website to Generate API Key',
       href: 'https://home.openweathermap.org/api_keys',
       type: 'link',
     },
