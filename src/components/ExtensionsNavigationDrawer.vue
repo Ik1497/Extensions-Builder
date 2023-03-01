@@ -13,6 +13,16 @@ const items = computed(() => [
     },
   },
   {
+    title: 'Progress Bar',
+    icon: 'mdi-progress-upload',
+    path: '/Progress-Bar',
+    enabled: true,
+    component: () => import('../pages/Progress-Bar.vue'),
+    meta: {
+      title: 'Progress Bar • Extensions Builder',
+    },
+  },
+  {
     title: 'Mute Indicator',
     icon: 'mdi-volume-mute',
     path: '/Mute-Indicator',

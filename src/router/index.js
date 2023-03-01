@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createMemoryHistory } from 'vue-router'
 
 const routes = [
   {
@@ -9,6 +9,16 @@ const routes = [
     component: () => import('../pages/Home.vue'),
     meta: {
       title: 'Home • Extensions Builder',
+    },
+  },
+  {
+    title: 'Progress Bar',
+    icon: 'mdi-progress-upload',
+    path: '/Progress-Bar',
+    enabled: true,
+    component: () => import('../pages/Progress-Bar.vue'),
+    meta: {
+      title: 'Progress Bar • Extensions Builder',
     },
   },
   {
@@ -56,7 +66,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createMemoryHistory(),
   routes
 })
 
