@@ -58,11 +58,7 @@ const extensionData = {
       type: 'heading'
     },
     {
-      name: 'The cycle feature lets all of the progress bar cycle. Enabling this feature will hide all progress bars expect one, and cycle through the progress bar list.',
-      type: 'text'
-    },
-    {
-      name: 'The transition is currently just a cut, in the future I will be expanding this to fade, to-right, to-left, to-down, to-up, etc.',
+      name: 'The cycle feature lets all of the progress bar cycle. Enabling this feature will only show one progress bar at a time, and cycle through the progress bar list with transitions.',
       type: 'text'
     },
     {
@@ -73,22 +69,22 @@ const extensionData = {
     },
     {
       name: 'cycle-duration',
-      description: 'How long each progress bar should be visible before continuing with the cycle (in MS).',
+      description: 'How long each progress bar should be visible before continuing with the cycle (in MS only).',
       default: '15000',
       type: 'number'
     },
     {
       name: 'cycle-transition-duration',
-      description: 'How long the cycle transition should take (in MS).',
+      description: 'How long the cycle transition should take (in MS only).',
       default: '500',
       type: 'number'
     },
     {
       name: 'cycle-transition',
-      description: 'Which transition should be used (more coming soon).',
+      description: 'Which transition should be used.',
       type: 'options',
       default: 'fade',
-      options: ['cut', 'fade']
+      options: ['cut', 'fade', 'slide-up', 'slide-right', 'slide-down', 'slide-left']
     },
     {
       name: 'Font',
