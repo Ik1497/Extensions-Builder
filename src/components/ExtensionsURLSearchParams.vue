@@ -127,6 +127,10 @@ function updateParamsUi() {
               <div>
                 <p data-url-parameter--title class="text-gray-200 font-semibold">{{ param.name }}</p>
                 <p data-url-parameter--description class="text-gray-400">{{ param.description }}</p>
+                <div v-if="param.type === 'options'">
+                  <br>
+                  <p>The default value is: "{{ param.default }}", don't alter this property if you want to keep it the same as "{{ param.default }}".</p>
+                </div>
               </div>
 
               <!--  -->
@@ -149,7 +153,7 @@ function updateParamsUi() {
               v-if="param.type === 'options'"
               label="Select"
               :items="param.options"
-              @update:modelValue="onUpdate(param.name, $event)"
+              @update:modelValue="updateParamsUi()"
               clearable
             ></v-select>
 

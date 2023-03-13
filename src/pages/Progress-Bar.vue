@@ -54,6 +54,17 @@ const extensionData = {
       type: 'string'
     },
     {
+      name: 'Position',
+      type: 'heading'
+    },
+    {
+      name: 'position',
+      description: 'Where all the progress bars should be located.',
+      type: 'options',
+      default: 'top-left',
+      options: ['top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right']
+    },
+    {
       name: 'Cycle (WIP)',
       type: 'heading'
     },
