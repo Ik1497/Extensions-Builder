@@ -16,6 +16,36 @@ const extensionData = {
       type: 'string'
     },
     {
+      name: 'theme',
+      description: 'Different visual options for this widget.',
+      type: 'options',
+      default: 'default',
+      options: ['default', 'compact']
+    },
+    {
+      name: 'position',
+      description: 'Where all the progress bars should be located.',
+      type: 'options',
+      default: 'top-left',
+      options: ['top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right']
+    },
+    {
+      name: 'wrap',
+      description: 'This makes the progress bars wrap next to each other instead of stacking on top of each other',
+      type: 'checkbox',
+      default: false
+    },
+    {
+      name: 'General Styling',
+      type: 'heading'
+    },
+    {
+      name: 'width',
+      description: 'Changes the width of the progress bar. Note: this will overwrite the width even if you\'re using themes.',
+      default: '',
+      type: 'string'
+    },
+    {
       name: 'Background',
       type: 'heading'
     },
@@ -56,13 +86,6 @@ const extensionData = {
     {
       name: 'Position',
       type: 'heading'
-    },
-    {
-      name: 'position',
-      description: 'Where all the progress bars should be located.',
-      type: 'options',
-      default: 'top-left',
-      options: ['top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right']
     },
     {
       name: 'Cycle (WIP)',

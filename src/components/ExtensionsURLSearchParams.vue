@@ -74,10 +74,8 @@ function updateParamsUi() {
 
 <template>
   <h1
-    class="text-2xl font-bold"
+    class="text-2xl font-bold mb-4"
   >{{ extensionName }}</h1>
-  <v-divider></v-divider>
-  <br>
   <v-card>
     <v-card-title primary-title>Output</v-card-title>
     <v-divider></v-divider>
@@ -90,7 +88,7 @@ function updateParamsUi() {
         :timeout="2000"
       >
         <template #activator="{ props }">
-          <v-btn 
+          <v-btn
             id="urlParametersCopyOutputUrl"
             class="ma-2"
             v-bind="props"
@@ -120,30 +118,15 @@ function updateParamsUi() {
             id="data-url-parameter-element"
           >
 
-
             <!-- Sheet Header -->
 
-            <div class="flex justify-between">
-              <div>
-                <p data-url-parameter--title class="text-gray-200 font-semibold">{{ param.name }}</p>
-                <p data-url-parameter--description class="text-gray-400">{{ param.description }}</p>
-                <div v-if="param.type === 'options'">
-                  <br>
-                  <p>The default value is: "{{ param.default }}", don't alter this property if you want to keep it the same as "{{ param.default }}".</p>
-                </div>
+            <div>
+              <p data-url-parameter--title class="text-gray-200 font-semibold">{{ param.name }}</p>
+              <p data-url-parameter--description class="text-gray-400">{{ param.description }}</p>
+              <div v-if="param.type === 'options'">
+                <br>
+                <p>The default value is: "{{ param.default }}", don't alter this property if you want to keep it the same as "{{ param.default }}".</p>
               </div>
-
-              <!--  -->
-              <!--  -->
-
-              <v-btn
-                icon="mdi-close"
-                color="error"
-                variant="tonal"
-                class="close-list-item-button"
-                onclick="this.parentNode.parentNode.remove()"
-              >
-              </v-btn>
             </div>
             <br>
 
@@ -187,9 +170,7 @@ function updateParamsUi() {
               @update:modelValue="updateParamsUi()"
             ></v-color-picker>
 
-
           </v-sheet>
-
 
           <template v-else-if="param.type === 'heading'">
             <h2 class="text-lg font-bold">{{ param.name }}
@@ -213,7 +194,6 @@ function updateParamsUi() {
             <br>
           </template>
 
-
         </template>
       </div>
     </v-card-text>
@@ -230,14 +210,6 @@ function updateParamsUi() {
 
   &:not(:last-child) {
     margin-bottom: .5rem;
-  }
-  .close-list-item-button {
-    --v-btn-height: .5rem;
-    font-size: var(--v-btn-height);
-
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
   }
 }
 
