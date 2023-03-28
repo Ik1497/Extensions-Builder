@@ -6,62 +6,7 @@ const routes = [
     icon: 'mdi-home',
     path: '/',
     enabled: true,
-    component: () => import('../pages/Home.vue'),
-    meta: {
-      title: 'Home • Extensions Builder',
-    },
-  },
-  {
-    title: 'Progress Bar',
-    icon: 'mdi-progress-upload',
-    path: '/Progress-Bar',
-    enabled: true,
-    component: () => import('../pages/Progress-Bar.vue'),
-    meta: {
-      title: 'Progress Bar • Extensions Builder',
-    },
-  },
-  {
-    title: 'Mute Indicator',
-    icon: 'mdi-volume-mute',
-    path: '/Mute-Indicator',
-    enabled: true,
-    component: () => import('../pages/Mute-Indicator.vue'),
-    meta: {
-      title: 'Mute Indicator • Extensions Builder',
-    },
-  },
-  {
-    title: 'Music Widget',
-    icon: 'mdi-spotify',
-    path: '/Music-Widget',
-    enabled: false,
-    component: () => import('../pages/Music-Widget.vue'),
-    meta: {
-      title: 'Music Widget • Extensions Builder',
-      metaTags: [
-        {
-          property: 'og:title',
-          content: 'Music Widget'
-        }
-      ]
-    },
-  },
-  {
-    title: 'Weather Widget',
-    icon: 'mdi-weather-lightning',
-    path: '/Weather-Widget',
-    enabled: true,
-    component: () => import('../pages/Weather-Widget.vue'),
-    meta: {
-      title: 'Weather Widget • Extensions Builder',
-      metaTags: [
-        {
-          property: 'og:title',
-          content: 'Weather Widget'
-        }
-      ]
-    },
+    component: () => import('../pages/Home.vue')
   }
 ]
 
@@ -69,6 +14,29 @@ const router = createRouter({
   history: createMemoryHistory(),
   routes
 })
+
+addRoutes()
+
+async function addRoutes() {
+  let urlParams = await fetch(`https://raw.githubusercontent.com/Ik1497/Docs/main/api/url-parameters.json`)
+  urlParams = await urlParams.json()
+  urlParams = urlParams.pages
+
+  urlParams.forEach(async function (urlParam) {
+    let pageData = await fetch(`https://raw.githubusercontent.com/Ik1497/Docs/main/url-parameters-src/${urlParam.apiPath}.json`)
+    pageData = await pageData.json()
+
+    pageData.URLSearchParams = JSON.parse(pageData.URLSearchParams)
+
+    router.addRoute({
+      path: `/${urlParam.path}`,
+      component: () => import('../components/ExtensionsURLSearchParams.vue'),
+      props: {
+        dataParams: pageData
+      }
+    })
+  });
+}
 
 router.beforeEach((to, from, next) => {
   const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);

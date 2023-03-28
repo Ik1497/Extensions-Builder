@@ -1,70 +1,32 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 const activeItem = ref(0);
-const items = computed(() => [
+const items = [
   {
-    title: 'Home',
+    name: 'Home',
     icon: 'mdi-home',
-    path: '/',
-    enabled: true,
-    component: () => import('../pages/Home.vue'),
-    meta: {
-      title: 'Home • Extensions Builder',
-    },
-  },
-  {
-    title: 'Progress Bar',
-    icon: 'mdi-progress-upload',
-    path: '/Progress-Bar',
-    enabled: true,
-    component: () => import('../pages/Progress-Bar.vue'),
-    meta: {
-      title: 'Progress Bar • Extensions Builder',
-    },
-  },
-  {
-    title: 'Mute Indicator',
-    icon: 'mdi-volume-mute',
-    path: '/Mute-Indicator',
-    enabled: true,
-    component: () => import('../pages/Mute-Indicator.vue'),
-    meta: {
-      title: 'Mute Indicator • Extensions Builder',
-    },
-  },
-  {
-    title: 'Music Widget',
-    icon: 'mdi-spotify',
-    path: '/Music-Widget',
-    enabled: false,
-    component: () => import('../pages/Music-Widget.vue'),
-    meta: {
-      title: 'Music Widget • Extensions Builder',
-      metaTags: [
-        {
-          property: 'og:title',
-          content: 'Music Widget'
-        }
-      ]
-    },
-  },
-  {
-    title: 'Weather Widget',
-    icon: 'mdi-weather-lightning',
-    path: '/Weather-Widget',
-    enabled: true,
-    component: () => import('../pages/Weather-Widget.vue'),
-    meta: {
-      title: 'Weather Widget • Extensions Builder',
-      metaTags: [
-        {
-          property: 'og:title',
-          content: 'Weather Widget'
-        }
-      ]
-    },
+    href: '/',
+    public: true
   }
-]);
+]
+
+addRoutes()
+
+async function addRoutes() {
+  let urlParams = await fetch(`https://raw.githubusercontent.com/Ik1497/Docs/main/api/url-parameters.json`)
+  urlParams = await urlParams.json()
+  urlParams = urlParams.pages
+
+  urlParams.forEach(async function (urlParam) {
+    let pageData = await fetch(`https://raw.githubusercontent.com/Ik1497/Docs/main/url-parameters-src/${urlParam.apiPath}.json`)
+    pageData = await pageData.json()
+
+    pageData.URLSearchParams = JSON.parse(pageData.URLSearchParams)
+    pageData.href = `/${urlParam.path}`
+
+    items.push(pageData)
+  });
+}
 </script>
 
 <template>
@@ -75,20 +37,16 @@ const items = computed(() => [
         :key="idx"
       >
         <v-list-item
-          v-if="item.enabled"
-          :active="$route.path === item.path"
+          v-if="item.public"
+          :active="$route.path === item.href"
           active-color="primary"
-          :to="'.' + item.path"
+          :to="'.' + item.href"
           @click="activeItem = idx"
         >
           <template #prepend>
             <v-icon class="mr-3">{{ item.icon }}</v-icon>
           </template>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-
-          <!-- <template v-if="item.badge" #append>
-            <v-chip label color="primary" size="x-small">{{ item.badge }}</v-chip>
-          </template> -->
+          <v-list-item-title>{{ item.name }}</v-list-item-title>
         </v-list-item>
       </template>
     </v-list>

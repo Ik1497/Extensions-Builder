@@ -2,6 +2,9 @@
 import { onMounted, ref } from 'vue'
 
 const props = defineProps(['data-params'])
+
+console.log(JSON.parse(JSON.stringify(props)))
+
 const extensionName = JSON.parse(JSON.stringify(props)).dataParams.name
 const extensionBaseUrl = JSON.parse(JSON.stringify(props)).dataParams.baseUrl
 const params = JSON.parse(JSON.stringify(props)).dataParams.URLSearchParams
