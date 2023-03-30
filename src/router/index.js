@@ -4,7 +4,7 @@ const routes = [
   {
     title: 'Home',
     icon: 'mdi-home',
-    path: '/',
+    path: '/:pathMatch(.*)',
     enabled: true,
     component: () => import('../pages/Home.vue')
   }
