@@ -9,16 +9,13 @@ const extensionName = JSON.parse(JSON.stringify(props)).dataParams.name
 const extensionBaseUrl = JSON.parse(JSON.stringify(props)).dataParams.baseUrl
 const params = JSON.parse(JSON.stringify(props)).dataParams.URLSearchParams
 
-onMounted(() => {
-  updateParamsUi()
+let paramsData = ref({})
+let paramsOutput = ref(``)
+let paramsOutputText = ref(``)
 
-  document.getElementById(`urlParametersCopyOutputUrl`).addEventListener(`click`, () => {
-    navigator.clipboard.writeText(updateParamsUi())
-  })
-})
+updateParamsUi()
 
 function updateParamsUi() {
-  console.log(`UPDATE`)
   const updateParamsUiCodeColors = {
     default: `#ffffff`,
     property: `#ff79c6`,
@@ -26,52 +23,44 @@ function updateParamsUi() {
     seperator: `#bd93f9`,
     baseUrl: `#aaa`,
   }
-  let URLSearchParamsArray = [] // Object.entries() format
-  let URLSearchParamsOutput = `<span style="color: ${updateParamsUiCodeColors.baseUrl}">${extensionBaseUrl}</span>`
 
-  document.getElementById('urlParametersList').querySelectorAll(`.v-sheet#data-url-parameter-element`).forEach(sheetElement => {
-    if (sheetElement.querySelector(`.v-select`) != null) {
-      if (sheetElement.querySelector(`.v-select .v-select__selection-text`)?.innerText != undefined && sheetElement.querySelector(`.v-select .v-select__selection-text`)?.innerText != `None`) {
-        URLSearchParamsArray.push([sheetElement.querySelector(`[data-url-parameter--title]`).innerText, sheetElement.querySelector(`.v-select .v-select__selection-text`)?.innerText])
-      }
-    }
-    
-    else if (sheetElement.querySelector(`.v-text-field`) != null) {
-      if (sheetElement.querySelector(`.v-text-field input`).value != ``) {
-        URLSearchParamsArray.push([sheetElement.querySelector(`[data-url-parameter--title]`).innerText, sheetElement.querySelector(`.v-text-field input`).value])
-      }
-    }
-    
-    else if (sheetElement.querySelector(`.v-checkbox`) != null) {
-      if (sheetElement.querySelector(`.v-checkbox input[type="checkbox"]`).checked) {
-        URLSearchParamsArray.push([sheetElement.querySelector(`[data-url-parameter--title]`).innerText])
-      }
-    }
-    
-    else if (sheetElement.querySelector(`.v-color-picker`) != null) {
-      if (sheetElement.querySelector(`.v-color-picker .v-color-picker-edit .v-color-picker-edit__input input`).value != ``) {
-        URLSearchParamsArray.push([sheetElement.querySelector(`[data-url-parameter--title]`).innerText, sheetElement.querySelector(`.v-color-picker .v-color-picker-preview__dot div`).style.background])
-      }
-    }
-  });
+  let URLSearchParamsArray = Object.entries(paramsData.value)
+  let URLSearchParamsOutputStyled = `<span style="color: ${updateParamsUiCodeColors.baseUrl}">${extensionBaseUrl}</span>`
+  let URLSearchParamsOutputText = extensionBaseUrl
 
   URLSearchParamsArray.forEach((URLSearchParamsArrayItem, URLSearchParamsArrayIndex) => {
-    if (URLSearchParamsArrayItem.length === 2) {
+    if (URLSearchParamsArrayItem[1] != true && URLSearchParamsArrayItem[1] != false) {
+      if (URLSearchParamsArrayItem[1] === ``) return
+      URLSearchParamsArrayItem[1] = URLSearchParamsArrayItem[1].replaceAll(`#`, `%23`)
+
       if (URLSearchParamsArrayIndex === 0) {
-        URLSearchParamsOutput += `<span style="color: ${updateParamsUiCodeColors.seperator}">?</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span><span style="color: ${updateParamsUiCodeColors.default}">=</span><span style="color: ${updateParamsUiCodeColors.value}">${URLSearchParamsArrayItem[1]}</span>`
+        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">?</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span><span style="color: ${updateParamsUiCodeColors.default}">=</span><span style="color: ${updateParamsUiCodeColors.value}">${URLSearchParamsArrayItem[1]}</span>`
+        URLSearchParamsOutputText += `?${URLSearchParamsArrayItem[0]}=${URLSearchParamsArrayItem[1]}`
       } else {
-        URLSearchParamsOutput += `<span style="color: ${updateParamsUiCodeColors.seperator}">&</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span><span style="color: ${updateParamsUiCodeColors.default}">=</span><span style="color: ${updateParamsUiCodeColors.value}">${URLSearchParamsArrayItem[1]}</span>`
+        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">&</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span><span style="color: ${updateParamsUiCodeColors.default}">=</span><span style="color: ${updateParamsUiCodeColors.value}">${URLSearchParamsArrayItem[1]}</span>`
+        URLSearchParamsOutputText += `&${URLSearchParamsArrayItem[0]}=${URLSearchParamsArrayItem[1]}`
       }
     } else {
+      if (!URLSearchParamsArrayItem[1]) return
+
       if (URLSearchParamsArrayIndex === 0) {
-        URLSearchParamsOutput += `<span style="color: ${updateParamsUiCodeColors.seperator}">?</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span>`
+        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">?</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span>`
+        URLSearchParamsOutputText += `?${URLSearchParamsArrayItem[0]}`
       } else {
-        URLSearchParamsOutput += `<span style="color: ${updateParamsUiCodeColors.seperator}">&</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span>`
+        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">&</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span>`
+        URLSearchParamsOutputText += `&${URLSearchParamsArrayItem[0]}`
       }
     }
   });
-  document.getElementById(`urlParametersOutputUrl`).innerHTML = URLSearchParamsOutput
-  return document.getElementById(`urlParametersOutputUrl`).innerText
+
+  paramsOutput.value = URLSearchParamsOutputStyled
+  paramsOutputText.value = URLSearchParamsOutputText
+
+  return paramsOutput
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text)
 }
 </script>
 
@@ -83,16 +72,14 @@ function updateParamsUi() {
     <v-card-title primary-title>Output</v-card-title>
     <v-divider></v-divider>
     <v-card-text>
-      <pre><code
-        id="urlParametersOutputUrl"
-      ></code></pre>
+      <pre><code v-html="paramsOutput"></code></pre>
       <br>
       <v-snackbar
         :timeout="2000"
       >
         <template #activator="{ props }">
           <v-btn
-            id="urlParametersCopyOutputUrl"
+            @click="copyToClipboard(paramsOutputText)"
             class="ma-2"
             v-bind="props"
             variant="tonal"
@@ -139,8 +126,9 @@ function updateParamsUi() {
               v-if="param.type === 'options'"
               label="Select"
               :items="param.options"
-              @update:modelValue="updateParamsUi()"
               clearable
+              v-model="paramsData[param.name]"
+              @update:modelValue="updateParamsUi()"
             ></v-select>
 
             <v-text-field
@@ -148,6 +136,7 @@ function updateParamsUi() {
               :label="`${param.name}${param.type === 'comma-list' ? ` (Comma seperated list)` : ``}`"
               :placeholder="param.default"
               clearable
+              v-model="paramsData[param.name]"
               @update:modelValue="updateParamsUi()"
             ></v-text-field>
 
@@ -157,19 +146,22 @@ function updateParamsUi() {
               :label="param.name"
               :placeholder="param.default"
               clearable
+              v-model="paramsData[param.name]"
               @update:modelValue="updateParamsUi()"
             ></v-text-field>
               
             <v-checkbox
               v-if="param.type === 'checkbox'"
               :label="param.name"
-              :model-value="param.default"
               @click="updateParamsUi()"
+              v-model="paramsData[param.name]"
+              :model-value="paramsData[param.name]"
             ></v-checkbox>
 
             <v-color-picker
               v-if="param.type === 'color'"
               :modes="['hsl', 'hsla', 'rgb', 'rgba']"
+              v-model="paramsData[param.name]"
               @update:modelValue="updateParamsUi()"
             ></v-color-picker>
 
@@ -196,7 +188,6 @@ function updateParamsUi() {
             <br>
             <br>
           </template>
-
         </template>
       </div>
     </v-card-text>
