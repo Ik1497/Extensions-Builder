@@ -24,6 +24,10 @@ async function addRoutes() {
     pageData.URLSearchParams = JSON.parse(pageData.URLSearchParams)
     pageData.href = `/${urlParam.path}`
 
+    if (localStorage.getItem(`websiteSettings__visibilityChannel`) === `beta`) {
+      pageData.public = true
+    }
+
     items.push(pageData)
   });
 }

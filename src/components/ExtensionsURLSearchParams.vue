@@ -3,11 +3,10 @@ import { onMounted, ref } from 'vue'
 
 const props = defineProps(['data-params'])
 
-console.log(JSON.parse(JSON.stringify(props)))
-
 const extensionName = JSON.parse(JSON.stringify(props)).dataParams.name
 const extensionBaseUrl = JSON.parse(JSON.stringify(props)).dataParams.baseUrl
 const params = JSON.parse(JSON.stringify(props)).dataParams.URLSearchParams
+const paramsCount = params.length
 
 let paramsData = ref({})
 let paramsOutput = ref(``)
@@ -29,26 +28,30 @@ function updateParamsUi() {
   let URLSearchParamsOutputText = extensionBaseUrl
 
   URLSearchParamsArray.forEach((URLSearchParamsArrayItem, URLSearchParamsArrayIndex) => {
-    if (URLSearchParamsArrayItem[1] != true && URLSearchParamsArrayItem[1] != false) {
-      if (URLSearchParamsArrayItem[1] === ``) return
-      URLSearchParamsArrayItem[1] = URLSearchParamsArrayItem[1].replaceAll(`#`, `%23`)
+    let URLParamKey = URLSearchParamsArrayItem[0]
+    let URLParamValue = URLSearchParamsArrayItem[1]
+
+    if (URLParamValue != true && URLParamValue != false) {
+      if (URLParamValue === ``) return
+      if (Array.isArray(URLParamValue)) URLParamValue = JSON.stringify(URLParamValue)
+      URLParamValue = URLParamValue.replaceAll(`#`, `%23`)
 
       if (URLSearchParamsArrayIndex === 0) {
-        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">?</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span><span style="color: ${updateParamsUiCodeColors.default}">=</span><span style="color: ${updateParamsUiCodeColors.value}">${URLSearchParamsArrayItem[1]}</span>`
-        URLSearchParamsOutputText += `?${URLSearchParamsArrayItem[0]}=${URLSearchParamsArrayItem[1]}`
+        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">?</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span><span style="color: ${updateParamsUiCodeColors.default}">=</span><span style="color: ${updateParamsUiCodeColors.value}">${URLParamValue}</span>`
+        URLSearchParamsOutputText += `?${URLParamKey}=${URLParamValue}`
       } else {
-        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">&</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span><span style="color: ${updateParamsUiCodeColors.default}">=</span><span style="color: ${updateParamsUiCodeColors.value}">${URLSearchParamsArrayItem[1]}</span>`
-        URLSearchParamsOutputText += `&${URLSearchParamsArrayItem[0]}=${URLSearchParamsArrayItem[1]}`
+        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">&</span><span style="color: ${updateParamsUiCodeColors.property}">${URLParamKey}</span><span style="color: ${updateParamsUiCodeColors.default}">=</span><span style="color: ${updateParamsUiCodeColors.value}">${URLParamValue}</span>`
+        URLSearchParamsOutputText += `&${URLParamKey}=${URLParamValue}`
       }
     } else {
-      if (!URLSearchParamsArrayItem[1]) return
+      if (!URLParamValue) return
 
       if (URLSearchParamsArrayIndex === 0) {
-        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">?</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span>`
-        URLSearchParamsOutputText += `?${URLSearchParamsArrayItem[0]}`
+        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">?</span><span style="color: ${updateParamsUiCodeColors.property}">${URLParamKey}</span>`
+        URLSearchParamsOutputText += `?${URLParamKey}`
       } else {
-        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">&</span><span style="color: ${updateParamsUiCodeColors.property}">${URLSearchParamsArrayItem[0]}</span>`
-        URLSearchParamsOutputText += `&${URLSearchParamsArrayItem[0]}`
+        URLSearchParamsOutputStyled += `<span style="color: ${updateParamsUiCodeColors.seperator}">&</span><span style="color: ${updateParamsUiCodeColors.property}">${URLParamKey}</span>`
+        URLSearchParamsOutputText += `&${URLParamKey}`
       }
     }
   });
@@ -65,9 +68,10 @@ function copyToClipboard(text) {
 </script>
 
 <template>
-  <h1
-    class="text-2xl font-bold mb-4"
-  >{{ extensionName }}</h1>
+  <div class="mb-4">
+    <h1 class="text-2xl font-bold">{{ extensionName }}</h1>
+    <p class="text-gray-400">{{ paramsCount }} Params</p>
+  </div>
   <v-card>
     <v-card-title primary-title>Output</v-card-title>
     <v-divider></v-divider>
@@ -117,6 +121,10 @@ function copyToClipboard(text) {
                 <br>
                 <p>The default value is: "{{ param.default }}", don't alter this property if you want to keep it the same as "{{ param.default }}".</p>
               </div>
+              <div v-if="param.type === 'array'">
+                <br>
+                <p>The add an option press <v-kbd style="display: inline;">enter</v-kbd></p>
+              </div>
             </div>
             <br>
 
@@ -164,6 +172,16 @@ function copyToClipboard(text) {
               v-model="paramsData[param.name]"
               @update:modelValue="updateParamsUi()"
             ></v-color-picker>
+
+            <v-combobox
+              v-if="param.type === 'array'"
+              label="Array"
+              clearable
+              multiple
+              chips
+              v-model="paramsData[param.name]"
+              @update:modelValue="updateParamsUi()"
+            ></v-combobox>
 
           </v-sheet>
 
