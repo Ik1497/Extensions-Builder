@@ -8,9 +8,11 @@ const extensionBaseUrl = JSON.parse(JSON.stringify(props)).dataParams.baseUrl
 const params = JSON.parse(JSON.stringify(props)).dataParams.URLSearchParams
 const paramsCount = params.length
 
-let paramsData = ref({})
-let paramsOutput = ref(``)
-let paramsOutputText = ref(``)
+const paramsData = ref({})
+const paramsOutput = ref(``)
+const paramsOutputText = ref(``)
+
+const combobox_search = ref({})
 
 updateParamsUi()
 
@@ -121,10 +123,10 @@ function copyToClipboard(text) {
                 <br>
                 <p>The default value is: "{{ param.default }}", don't alter this property if you want to keep it the same as "{{ param.default }}".</p>
               </div>
-              <div v-if="param.type === 'array'">
+              <!-- <div v-if="param.type === 'array'">
                 <br>
                 <p>The add an option press <v-kbd style="display: inline;">enter</v-kbd></p>
-              </div>
+              </div> -->
             </div>
             <br>
 
@@ -179,9 +181,32 @@ function copyToClipboard(text) {
               clearable
               multiple
               chips
+              :hide-no-data="false"
+              hide-selected
               v-model="paramsData[param.name]"
+              v-model:search="combobox_search[param.name]"
               @update:modelValue="updateParamsUi()"
-            ></v-combobox>
+            >
+
+              <template v-slot:no-data>
+                <v-list-item v-if="combobox_search[param.name] === undefined || combobox_search[param.name] === null || combobox_search[param.name] === `` || paramsData[param.name] === undefined || paramsData[param.name] === null">
+                  <v-list-item-title>
+                    Type out your option and then press <v-kbd style="display: inline;">enter</v-kbd>
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item v-else-if="paramsData[param.name] && !Object.values(paramsData[param.name]).includes(combobox_search[param.name])">
+                  <v-list-item-title>
+                    No results matching "<strong>{{ combobox_search[param.name] }}</strong>". Press <v-kbd style="display: inline;">enter</v-kbd> to create a new one
+                  </v-list-item-title>
+                </v-list-item>
+                <v-list-item v-else>
+                  <v-list-item-title>
+                    "<strong>{{ combobox_search[param.name] }}</strong>" already exists. Press enter to remove "<strong>{{ combobox_search[param.name] }}</strong>".
+                  </v-list-item-title>
+                </v-list-item>
+              </template>
+          
+            </v-combobox>
 
           </v-sheet>
 
