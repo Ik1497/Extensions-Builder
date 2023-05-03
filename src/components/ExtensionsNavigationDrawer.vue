@@ -1,56 +1,56 @@
 <script setup>
 import { ref } from 'vue';
+import { GetRoutes } from '@/composables/GetRoutes';
+
+const props = defineProps([
+  `expanded`,
+  `mobile`
+])
+
 const activeItem = ref(0);
-const items = [
+const items = ref([
   {
     name: 'Home',
     icon: 'mdi-home',
     href: '/',
     public: true
   }
-]
+])
 
-addRoutes()
+app()
 
-async function addRoutes() {
-  let urlParams = await fetch(`https://raw.githubusercontent.com/Ik1497/Docs/main/api/url-parameters.json`)
-  urlParams = await urlParams.json()
-  urlParams = urlParams.pages
+async function app() {
+  let routesData = await GetRoutes()
 
-  urlParams.forEach(async function (urlParam) {
-    let pageData = await fetch(`https://raw.githubusercontent.com/Ik1497/Docs/main/url-parameters-src/${urlParam.apiPath}.json`)
-    pageData = await pageData.json()
+  items.value = [
+    ...items.value,
+    ...routesData
+  ]
 
-    pageData.URLSearchParams = JSON.parse(pageData.URLSearchParams)
-    pageData.href = `/${urlParam.path}`
-
-    if (localStorage.getItem(`websiteSettings__visibilityChannel`) === `beta`) {
-      pageData.public = true
-    }
-
-    items.push(pageData)
-  });
+  items.value.forEach((item, itemIndex) => {
+    if (localStorage.getItem(`websiteSettings__visibilityChannel`) === `beta`) items.value[itemIndex].public = true
+  })
 }
 </script>
 
 <template>
-  <v-navigation-drawer permanent>
+  <v-navigation-drawer :permanent="!props.mobile" v-model="props.expanded">
     <v-list v-model="activeItem" nav density="compact">
       <template
-        v-for="(item, idx) in items"
-        :key="idx"
+        v-for="(route, routeIndex) in items"
+        :key="routeIndex"
       >
         <v-list-item
-          v-if="item.public"
-          :active="$route.path === item.href"
+          v-if="route.public"
+          :active="$route.path === route.path"
           active-color="primary"
-          :to="'.' + item.href"
-          @click="activeItem = idx"
+          :to="'./' + route.path"
+          @click="activeItem = routeIndex"
         >
           <template #prepend>
-            <v-icon class="mr-3">{{ item.icon }}</v-icon>
+            <v-icon class="mr-3">{{ route.icon }}</v-icon>
           </template>
-          <v-list-item-title>{{ item.name }}</v-list-item-title>
+          <v-list-item-title>{{ route.name }}</v-list-item-title>
         </v-list-item>
       </template>
     </v-list>

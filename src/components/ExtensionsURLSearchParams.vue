@@ -1,5 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
+import ColorPicker from './ColorPicker.vue'
+import ImportFromUrl from './ImportFromUrl.vue'
 
 const props = defineProps(['data-params'])
 
@@ -25,6 +27,12 @@ function updateParamsUi() {
     baseUrl: `#aaa`,
   }
 
+  Object.entries(paramsData.value).forEach(([item, value]) => {
+    if (value === `` || value === null || value === undefined) {
+      delete paramsData.value[item]
+    }
+  })
+
   let URLSearchParamsArray = Object.entries(paramsData.value)
   let URLSearchParamsOutputStyled = `<span style="color: ${updateParamsUiCodeColors.baseUrl}">${extensionBaseUrl}</span>`
   let URLSearchParamsOutputText = extensionBaseUrl
@@ -34,7 +42,8 @@ function updateParamsUi() {
     let URLParamValue = URLSearchParamsArrayItem[1]
 
     if (URLParamValue != true && URLParamValue != false) {
-      if (URLParamValue === ``) return
+      if (URLParamValue === `` || URLParamValue === null) delete paramsData.value[URLParamKey]
+      if (URLParamValue === `` || URLParamValue === null) return
       if (Array.isArray(URLParamValue)) URLParamValue = JSON.stringify(URLParamValue)
       URLParamValue = URLParamValue.replaceAll(`#`, `%23`)
 
@@ -67,12 +76,51 @@ function updateParamsUi() {
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text)
 }
+
+function importParamsFromUrl(e) {
+  if (typeof e != `object`) return
+
+  Object.entries(e.data).forEach(item => {
+    e[item[0]] = item[1]
+      .replaceAll(`%23`, `#`)
+  })
+
+  if (e.overwrite === true) {
+    paramsData.value = {
+      ...e.data
+    }
+  } else {
+    paramsData.value = {
+      ...paramsData.value,
+      ...e.data
+    }
+  }
+
+  updateParamsUi()
+}
+
+function clearParams() {
+  paramsData.value = {}
+  updateParamsUi()
+}
 </script>
 
 <template>
-  <div class="mb-4">
-    <h1 class="text-2xl font-bold">{{ extensionName }}</h1>
-    <p class="text-gray-400">{{ paramsCount }} Params</p>
+  <div class="mb-4" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h1 class="text-2xl font-bold">{{ extensionName }}</h1>
+      <p class="text-gray-400">{{ paramsCount }} Params</p>
+    </div>
+    <div style="display: flex; gap: .5rem;">
+      <ImportFromUrl :base-url="extensionBaseUrl" @update="importParamsFromUrl" />
+
+      <v-btn
+        color="error"
+        variant="tonal"
+        prepend-icon="mdi-close"
+        @click="clearParams"
+      >Clear</v-btn>
+    </div>
   </div>
   <v-card>
     <v-card-title primary-title>Output</v-card-title>
@@ -163,17 +211,16 @@ function copyToClipboard(text) {
             <v-checkbox
               v-if="param.type === 'checkbox'"
               :label="param.name"
-              @click="updateParamsUi()"
-              v-model="paramsData[param.name]"
               :model-value="paramsData[param.name]"
+              @update:modelValue="paramsData[param.name] === undefined ? paramsData[param.name] = true : paramsData[param.name] = !paramsData[param.name]; updateParamsUi()"
             ></v-checkbox>
 
-            <v-color-picker
+            <color-picker
               v-if="param.type === 'color'"
               :modes="['hsl', 'hsla', 'rgb', 'rgba']"
               v-model="paramsData[param.name]"
               @update:modelValue="updateParamsUi()"
-            ></v-color-picker>
+            ></color-picker>
 
             <v-combobox
               v-if="param.type === 'array'"

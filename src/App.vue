@@ -1,15 +1,25 @@
 <script setup>
 import ExtensionsNavigationDrawer from './components/ExtensionsNavigationDrawer.vue'
+
+import { ref } from 'vue'
+import { useDisplay } from 'vuetify'
+
+const display = ref(useDisplay())
+
+const expanded = ref(true)
 </script>
 
 <template>
   <v-app>
     <v-app-bar>
+      <v-app-bar-nav-icon v-if="display.mobile" @click="expanded = !expanded"></v-app-bar-nav-icon>
+
       <img src="https://ik1497.github.io/assets/images/favicon.png" alt="Favicon">
-      <v-toolbar-title>Extensions Builder <span style="font-weight: 100;">by Ik1497</span></v-toolbar-title>
+
+      <v-app-bar-title>Extensions Builder <span style="font-weight: 100;">by Ik1497</span></v-app-bar-title>
     </v-app-bar>
 
-    <ExtensionsNavigationDrawer />
+    <ExtensionsNavigationDrawer :mobile="display.mobile" :expanded="display.mobile === true ? expanded : display.mobile === false ? `` : undefined" />
 
     <v-main>
       <router-view :key="$route.fullPath"></router-view>

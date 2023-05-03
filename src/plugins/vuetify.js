@@ -1,6 +1,7 @@
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
+import colors from 'vuetify/lib/util/colors'
 
 // Vuetify
 import { createVuetify } from 'vuetify'
@@ -9,10 +10,21 @@ import { createVuetify } from 'vuetify'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 
 export default createVuetify({
+  theme: {
+    defaultTheme: `dark`,
+    themes: {
+      dark: {
+        colors: {
+          primary: colors.blue.lighten1,
+          secondary: colors.blueGrey.lighten1
+        }
+      }
+    }
+  },
   components: {
     VDataTable,
   },
-  theme: {
-    defaultTheme: 'dark'
+  display: {
+    mobileBreakpoint: `md`
   }
 })
