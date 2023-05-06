@@ -3,11 +3,11 @@ import { ref } from 'vue'
 import ColorPicker from './ColorPicker.vue'
 import ImportFromUrl from './ImportFromUrl.vue'
 
-const props = defineProps(['data-params'])
+const { dataParams } = defineProps(['data-params'])
 
-const extensionName = JSON.parse(JSON.stringify(props)).dataParams.name
-const extensionBaseUrl = JSON.parse(JSON.stringify(props)).dataParams.baseUrl
-const params = JSON.parse(JSON.stringify(props)).dataParams.URLSearchParams
+const extensionName = dataParams.name
+const extensionBaseUrl = dataParams.baseUrl
+const params = dataParams.URLSearchParams
 const paramsCount = params.length
 
 const paramsData = ref({})
@@ -182,7 +182,7 @@ function clearParams() {
 
             <v-select
               v-if="param.type === 'options'"
-              label="Select"
+              :label="param.name"
               :items="param.options"
               clearable
               v-model="paramsData[param.name]"
@@ -234,7 +234,6 @@ function clearParams() {
               v-model:search="combobox_search[param.name]"
               @update:modelValue="updateParamsUi()"
             >
-
               <template v-slot:no-data>
                 <v-list-item v-if="combobox_search[param.name] === undefined || combobox_search[param.name] === null || combobox_search[param.name] === `` || paramsData[param.name] === undefined || paramsData[param.name] === null">
                   <v-list-item-title>

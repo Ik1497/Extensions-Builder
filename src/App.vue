@@ -3,10 +3,21 @@ import ExtensionsNavigationDrawer from './components/ExtensionsNavigationDrawer.
 
 import { ref } from 'vue'
 import { useDisplay } from 'vuetify'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+router.push(`/`)
 
 const display = ref(useDisplay())
 
 const expanded = ref(true)
+const extensionsNavigationDrawerData = ref({})
+
+function extensionsNavigationDrawerUpdate() {
+  if (extensionsNavigationDrawerData.value?.loaded === true) {
+    router.push(location.hash.replace(`#`, ``))
+  }
+}
 </script>
 
 <template>
@@ -19,7 +30,7 @@ const expanded = ref(true)
       <v-app-bar-title>Extensions Builder <span style="font-weight: 100;">by Ik1497</span></v-app-bar-title>
     </v-app-bar>
 
-    <ExtensionsNavigationDrawer :mobile="display.mobile" :expanded="display.mobile === true ? expanded : display.mobile === false ? `` : undefined" />
+    <ExtensionsNavigationDrawer v-model="extensionsNavigationDrawerData" @update:model-value="extensionsNavigationDrawerUpdate" :mobile="display.mobile" :expanded="display.mobile === true ? expanded : display.mobile === false ? `` : undefined" />
 
     <v-main>
       <router-view :key="$route.fullPath"></router-view>

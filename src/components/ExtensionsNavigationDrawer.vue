@@ -1,26 +1,39 @@
 <script setup>
-import { ref } from 'vue';
-import { GetRoutes } from '@/composables/GetRoutes';
+import { ref } from 'vue'
+import { GetRoutes } from '@/composables/GetRoutes'
+import { useRoute } from 'vue-router'
 
 const props = defineProps([
+  `model-value`,
   `expanded`,
-  `mobile`
+  `mobile`,
 ])
+
+const emits = defineEmits([
+  `update:modelValue`,
+])
+
+const currentRoute = useRoute()
 
 const activeItem = ref(0);
 const items = ref([
   {
     name: 'Home',
     icon: 'mdi-home',
-    href: '/',
+    path: '/',
     public: true
   }
 ])
+
+const settings = ref(props.modelValue || {
+  loaded: false,
+})
 
 app()
 
 async function app() {
   let routesData = await GetRoutes()
+  routesData = routesData.array
 
   items.value = [
     ...items.value,
@@ -29,6 +42,11 @@ async function app() {
 
   items.value.forEach((item, itemIndex) => {
     if (localStorage.getItem(`websiteSettings__visibilityChannel`) === `beta`) items.value[itemIndex].public = true
+  })
+
+  emits(`update:modelValue`, {
+    ...settings.value,
+    loaded: true,
   })
 }
 </script>
@@ -42,9 +60,9 @@ async function app() {
       >
         <v-list-item
           v-if="route.public"
-          :active="$route.path === route.path"
+          :active="currentRoute.path === `/${route.path}`"
           active-color="primary"
-          :to="'./' + route.path"
+          :to="route.path"
           @click="activeItem = routeIndex"
         >
           <template #prepend>

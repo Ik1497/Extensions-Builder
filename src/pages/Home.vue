@@ -8,8 +8,12 @@ app()
 
 async function app() {
   let routesData = await GetRoutes()
-  routes.value = routesData
+  routes.value = routesData.array
+
+  console.log(routes.value)
 }
+
+const json = ref()
 </script>
 
 <template>
@@ -24,11 +28,11 @@ async function app() {
   <br>
 
   <template v-for="route in routes">
-    <v-card :to="'./' + route.path">
+    <v-card :to="route.path">
       <v-card-title><v-icon size="xs" style="padding-right: .5rem; padding-bottom: .1rem;">{{ route.icon }}</v-icon> {{ route.name }}</v-card-title>
       <v-divider></v-divider>
       <v-card-text>
-        <p>{{ route.URLSearchParams.length }} Params</p>
+        <p>{{ route?.URLSearchParams?.length }} Params</p>
       </v-card-text>
     </v-card>
 

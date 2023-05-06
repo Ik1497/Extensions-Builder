@@ -1,41 +1,41 @@
-import { createRouter, createMemoryHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { GetRoutes } from '@/composables/GetRoutes'
 
 const routes = [
   {
     title: 'Home',
     icon: 'mdi-home',
-    path: '/:pathMatch(.*)',
-    enabled: true,
+    path: '/',
     component: () => import('../pages/Home.vue')
+  },
+  {
+    title: '404 Not Found',
+    icon: 'mdi-file-remove',
+    path: '/:pathMatch(.*)',
+    component: () => import('../pages/404.vue')
   }
 ]
 
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHashHistory(),
   routes
 })
 
 addRoutes()
 
 async function addRoutes() {
-  let urlParams = await fetch(`https://raw.githubusercontent.com/Ik1497/Docs/main/api/url-parameters.json`)
-  urlParams = await urlParams.json()
-  urlParams = urlParams.pages
+  let urlParams = await GetRoutes()
+  urlParams = urlParams.array
 
-  urlParams.forEach(async function (urlParam) {
-    let pageData = await fetch(`https://raw.githubusercontent.com/Ik1497/Docs/main/url-parameters-src/${urlParam.apiPath}.json`)
-    pageData = await pageData.json()
-
-    pageData.URLSearchParams = JSON.parse(pageData.URLSearchParams)
-
+  urlParams.forEach(urlParam => {
     router.addRoute({
       path: `/${urlParam.path}`,
       component: () => import('../components/ExtensionsURLSearchParams.vue'),
       props: {
-        dataParams: pageData
+        dataParams: urlParam
       }
     })
-  });
+  })
 }
 
 router.beforeEach((to, from, next) => {

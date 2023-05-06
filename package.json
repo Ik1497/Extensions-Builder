@@ -11,7 +11,9 @@
   "dependencies": {
     "@mdi/font": "5.9.55",
     "core-js": "^3.8.3",
+    "json-editor-vue": "^0.10.6",
     "roboto-fontface": "*",
+    "vanilla-jsoneditor": "^0.17.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuetify": "npm:@vuetify/nightly@next",
